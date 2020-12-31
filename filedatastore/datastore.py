@@ -1,4 +1,4 @@
-import json
+ortimport json
 
 def add(key,value,ttl,path):
     if path == "":
@@ -13,10 +13,10 @@ def add(key,value,ttl,path):
                 if len(key)<=32 and len(value)<=16*1024:
                     data = json.load(file)
                     
-                    print("Data",data)
-                    print("type",type(data))
+                    #print("Data",data)
+                    #print("type",type(data))
                     data = dict(data)
-                    print("type",type(data))
+                    #print("type",type(data))
                     if key not in data:
                         data[key] = value
                         file.seek(0)
