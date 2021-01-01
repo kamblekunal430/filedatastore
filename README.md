@@ -2,6 +2,8 @@
 A file based key value data store in python that support the basic CRD (create, read, and deleter) operations.
 It can be used as a library to instiantiate and work
 
+[![Watch the video]](https://drive.google.com/file/d/1uTPf_r1bosFZV0zLwGKkfePDvymgVXqe/view?usp=sharing)
+
 The data store will support the following function requirements :
 
 1. It can be initialized using an optional file path. If one is not provided, it will reliably create itself in a reasonable location on the laptop.
