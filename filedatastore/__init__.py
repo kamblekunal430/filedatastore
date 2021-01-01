@@ -12,8 +12,13 @@ def help():
 def create(key,value,ttl=0):
     datastore.add(key,value,int(ttl))
 
+# Function to read the key-value from the datastore
 def read(key):
     datastore.read_data(key)
+
+# Function to delete the key form the datastore
+def delete(key):
+    datastore.delete_data(key)
 
 
 
@@ -24,15 +29,14 @@ print("Do you want to specify datastore location? (Y/N)")
 if input().lower() == 'y':
     print("Enter the path for datastore")
     path = input()
+
+    # setting the path of datastore
     constant.set(path)
     #print("init",constant.path())
     print("Datastore path initialized")
+
 else:
+    # setting default path of the datastore
     constant.set()
 
-
 datastore.help() # To display the help menu
-
-
-
-    

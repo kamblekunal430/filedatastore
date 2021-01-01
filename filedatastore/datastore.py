@@ -3,7 +3,7 @@ import time
 from filedatastore import constant
 
 
-# Function to display the operation that can be performed.
+# Function to display the operation that can be performed on datastore.
 def help(): 
     usage = '''
     Operations:-
@@ -11,6 +11,7 @@ def help():
     create(key,value,time_to_live(optional))
     read(key)
     delete(key)
+
     '''
     print(usage)
 
@@ -35,9 +36,10 @@ def add(key,value,ttl):
 
                     
                     if key not in data:
-
                         # adding the key value to the datastore if the key does not exist 
-                        data[key] = [value,time.time()+ttl if ttl else ttl]
+                        data[key] = [value,time.time()+ttl if ttl else ttl] # Also setting the time-to-live
+                        
+                        # writing data to datastore
                         file.seek(0)
                         json.dump(data,file)
                         print("'key':<value> added to the datastore")
@@ -58,7 +60,9 @@ def add(key,value,ttl):
 
         # creating the file and adding the key-value pair
         with open(filepath,'w') as file:
-            x = {key:[value,time.time()+ttl if ttl else ttl]}
+            x = {key:[value,time.time()+ttl if ttl else ttl]} # also setting the time-to-live
+
+            # writing data to the datastore
             json.dump(x,file)
             print("'key':<value> added to the datastore")
             
@@ -69,28 +73,66 @@ def read_data(key):
     filepath = constant.path()
     
     try:
+        # opening datastore to read and write
         with open(filepath,'r+') as file:
+
+            # reading data from the datastore
             data = json.load(file)
 
             data = dict(data)
 
+            # checking if the key exist is data
             if key in data:
-                if data[key][1] > 0:
-                    if data[key][1] > time.time():
+                if data[key][1] > 0: # checking if the key has time-to-live
+                    if data[key][1] > time.time(): # checking if the time-to-live has completed
                         print("Value:-\n",data[key][0])
                     else:
-                        #delete_data(key)
-                        print("The key has expired!")
+                        delete_data(key)
                 else:
                     print("Value:-\n",data[key][0])
             else:
                 print("Key is invalid or has expired!")
 
-    except FileNotFoundError:
+    
+    except FileNotFoundError: # if unable to read the datastore
         print("Unable to read the datastore! Create a datastore")
         help()
 
 
+#function to delete the key-value form the datastore
+def delete_data(key):
+    # Getting the datastore path
+    filepath = constant.path()
+    try:
+        # accessing the datastore to read and write
+        with open(filepath,'r+') as file:
+
+            # loading the data from the datastore
+            data = json.load(file)
+
+            data = dict(data)
+
+            if key in data: # checking if the key exist in datastore
+                if data[key][1] > 0: # checking if the key has time to live property
+                    if data[key][1] > time.time(): # checking if the time to live is reached
+                        data.pop(key)
+                        print("'key':<value> successfully deleted")
+                    else:
+                        data.pop(key)
+                        print("The key has expired!")
+                else:
+                    data.pop(key)
+                    print("'key':<value> successfully deleted")
+            else:
+                print("Key is invalid or has expired!")
+            
+            # writing data to the datastore
+        with open(filepath,'w') as file:    
+            json.dump(data,file)
+
+    except FileNotFoundError:
+        print("Unable to read the datastore! Create a datastore")
+        help()
 
     
 
